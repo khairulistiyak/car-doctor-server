@@ -66,6 +66,7 @@ async function run() {
 
     // services route
     app.get("/services", async (req, res) => {
+<<<<<<< HEAD
       const sort = req.query.sort;
       const search = req.query.search;
       console.log(search);
@@ -120,6 +121,50 @@ async function run() {
       res.send(result);
     });
 
+=======
+      const cursor = serviceCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const options = {
+        // Include only the `title` and `imdb` fields in the returned document
+        projection: { title: 1, price: 1, service_id: 1, img: 1 },
+      };
+
+      const result = await serviceCollection.findOne(query, options);
+      res.send(result);
+    });
+
+    // checkout routes
+    app.get("/checkout", verifyJWT, async (req, res) => {
+      const decoded = req.decode;
+
+      console.log("com back after verify", decoded);
+      if (decoded.email !== req.query.email) {
+        return res.send({ error: 1, message: "forbidden access" });
+      }
+
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await checkOutCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post("/checkout", async (req, res) => {
+      const booking = req.body;
+      console.log(booking);
+      const result = await checkOutCollection.insertOne(booking);
+      res.send(result);
+    });
+
+
     app.patch("/checkout/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -143,7 +188,12 @@ async function run() {
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
+<<<<<<< HEAD
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+=======
+
+    console.log("server pig ");
+>>>>>>> 7eb4b7e07983bf283ff29f4ea24fd8cef4c292b1
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
