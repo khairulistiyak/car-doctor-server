@@ -70,9 +70,9 @@ async function run() {
       const search = req.query.search;
       console.log(search);
       // const query = { title: { $regex: search, $option: "i" } };
-      const query = { title: { $regex: search, $options: "i" } };
+      // const query = { title: { $regex: search, $options: "i" } };
 
-      // const query = { price: { $gt: 50, $lte: 150 } };
+      const query = { price: { $gt: 50, $lte: 150 } };
 
       const options = {
         // Sort matched documents in descending order by rating
